@@ -62,7 +62,7 @@ So without further ado, let's see some of the techniques we can use to perform b
 
 Caution!!!!!!!!!!!!!!!!!!!
 
-Although static analysis is performed without running the malware, it is highly recommended that you perform malware analysis in an isolated Virtual Machine. You can create a clean snapshot of your Virtual Machine before performing any malware analysis and revert it to start from a clean state again after every analysis. Don't perform malware analysis on a live machine that is not purpose-built for malware analysis. For this room, we will be using the attached Remnux VM(opens in new tab). Remnux (Reverse Engineering Malware Linux) is a Linux distribution purpose-built for malware analysis. It has many tools required for malware analysis that are already installed on it.
+Although static analysis is performed without running the malware, it is highly recommended that you perform malware analysis in an isolated Virtual Machine. You can create a clean snapshot of your Virtual Machine before performing any malware analysis and revert it to start from a clean state again after every analysis. Don't perform malware analysis on a live machine that is not purpose-built for malware analysis. For this room, we will be using the attached Remnux VM . Remnux (Reverse Engineering Malware Linux) is a Linux distribution purpose-built for malware analysis. It has many tools required for malware analysis that are already installed on it.
 
 Examining the file type
 Though the file type of malware is often visible in the file extension and is obvious, sometimes malware authors try to trick users by using misleading file extensions. In such scenarios, it is helpful to know how to find the actual file type of a file without depending on file extensions. In Linux, we can find the file type of a file using the file command. To understand what the file command does, we can read its man page or use the --help option:
@@ -76,7 +76,7 @@ file <"filename">
 
 ![red final samir tool](https://github.com/saad-711/samir-tool/blob/main/image_2026-05-18_001745599.png)
 
-There is a folder named Samples on the Desktop in the attached VM. We will be using the samples present in that folder for our analysis. The above terminal shows the file command being run on the 'WannaCry' sample. The output shows a PE32(opens in new tab) executable file with a Graphical User Interface, which was compiled for a system that runs Microsoft Windows with an Intel 80386-based processor. The Intel 80386 processor was one of the first 32-bit processors ever, and the instruction set designed for the 80386 is still used for 32-bit Intel processors, which is why you see "x86" processors and code. This means that the "80386" in the output above tells us that this application was designed for 32-bit Intel processors.
+There is a folder named Samples on the Desktop in the attached VM. We will be using the samples present in that folder for our analysis. The above terminal shows the file command being run on the 'WannaCry' sample. The output shows a PE32 executable file with a Graphical User Interface, which was compiled for a system that runs Microsoft Windows with an Intel 80386-based processor. The Intel 80386 processor was one of the first 32-bit processors ever, and the instruction set designed for the 80386 is still used for 32-bit Intel processors, which is why you see "x86" processors and code. This means that the "80386" in the output above tells us that this application was designed for 32-bit Intel processors.
 
 ## Examining Strings
 
@@ -88,11 +88,11 @@ We will find that it is also a simple command to use. We can use the following c
 
 strings <"filename">
 
-Looking at strings in a file can often give clues related to the behaviour of malware. For example, if we see URLDownloadToFile (opens in new tab)in the output of the strings command, we will know that this malware is doing something with the URLDownloadToFile Windows API(opens in new tab). Most likely, it is downloading a file from the internet and saving it on the disk. Similarly, strings might also provide contextual information that helps us later during malware analysis.
+Looking at strings in a file can often give clues related to the behaviour of malware. For example, if we see URLDownloadToFile in the output of the strings command, we will know that this malware is doing something with the URLDownloadToFile Windows API. Most likely, it is downloading a file from the internet and saving it on the disk. Similarly, strings might also provide contextual information that helps us later during malware analysis.
 
 ![red final samir tool](https://github.com/saad-711/samir-tool/blob/main/image_2026-05-18_001800536.png)
 
-Here we can see the strings command being run against the 'Wannacry' sample. We will see that the output starts with the DOS Stub, which is the text that says !This program cannot be run in DOS mode. Some values don't make much sense and look like garbage, but you will also see useful output. For example, we can see above that some strings look like Windows APIs. For example, CloseHandle, GetExitCodeProcess, TerminateProcess, and so on. Similarly, we can see text that says inflate 1.1.3 Copyright 1995-1998 Mark Adler. A quick search shows that it is a part of the zlib data compression (opens in new tab)library; this tells us that the sample might be using this library.
+Here we can see the strings command being run against the 'Wannacry' sample. We will see that the output starts with the DOS Stub, which is the text that says !This program cannot be run in DOS mode. Some values don't make much sense and look like garbage, but you will also see useful output. For example, we can see above that some strings look like Windows APIs. For example, CloseHandle, GetExitCodeProcess, TerminateProcess, and so on. Similarly, we can see text that says inflate 1.1.3 Copyright 1995-1998 Mark Adler. A quick search shows that it is a part of the zlib data compression library; this tells us that the sample might be using this library.
 
 
 ## Calculating Hashes 
@@ -110,7 +110,7 @@ Above, we can see the md5sum hash is calculated for the file named WannaCry.
 Similarly, sha1sum and sha256sum commands can be used for calculating sha1sum or sha256sum of a file (Hashes are often referred to without the `sum` at the end, e.g. md5 instead of md5sum and so on.)
 
 # AV scans and VirusTotal
-Scanning a file using AVs or searching for a hash on VirusTotal(opens in new tab) can also provide useful information about the classification of malware performed by security researchers. However, when using an online scanner, it is recommended to search for the malware's hash instead of uploading it online to avoid leaking sensitive information. Only upload a sample if you are sure of what you are doing.
+Scanning a file using AVs or searching for a hash on VirusTotal can also provide useful information about the classification of malware performed by security researchers. However, when using an online scanner, it is recommended to search for the malware's hash instead of uploading it online to avoid leaking sensitive information. Only upload a sample if you are sure of what you are doing.
 
 Let's see what it says about the sample for which we calculated the hash above. We can search for the md5sum we calculated for the WannaCry sample on the VirusTotal homepage:
 
@@ -138,7 +138,7 @@ Perhaps it is very clear from the above screenshots that we are looking at a sam
 
 # PE Header
 
-The PE File Header(opens in new tab) contains the metadata about a Portable Executable file. This data can help us find a lot of helpful information to help us in our analysis. some of the vital information found in the PE header is explained below:
+The PE File Header  contains the metadata about a Portable Executable file. This data can help us find a lot of helpful information to help us in our analysis. some of the vital information found in the PE header is explained below:
 
 ![red final samir tool](https://github.com/saad-711/samir-tool/blob/main/image_2026-05-18_002029784.png)
 
@@ -146,9 +146,9 @@ Imports/Exports :
 
 A PE file seldom contains all the code that it needs to run on a system on its own. Most of the time, it reuses code provided by the Operating System. This is done to use less space and leverage the framework that the Operating System has laid out to perform tasks instead of re-inventing the wheel. Imports are such functions that the PE file imports from outside to perform different tasks.
 
-For example, if a developer wants to query a Windows Registry value, they will import the RegQueryValue(opens in new tab) function provided by Microsoft instead of writing the code themselves. It is understood that this function will be present on any Windows machine on which the developer's code is going to run, so it does not need to be included in the PE file itself. Similarly, any PE file export functions are exposed to other binaries that can use that function instead of implementing it themselves. Exports are generally associated with Dynamically-Linked libraries (DLL files), and it is not typical for a non-DLL PE file to have a lot of exports.
+For example, if a developer wants to query a Windows Registry value, they will import the RegQueryValue  function provided by Microsoft instead of writing the code themselves. It is understood that this function will be present on any Windows machine on which the developer's code is going to run, so it does not need to be included in the PE file itself. Similarly, any PE file export functions are exposed to other binaries that can use that function instead of implementing it themselves. Exports are generally associated with Dynamically-Linked libraries (DLL files), and it is not typical for a non-DLL PE file to have a lot of exports.
 
-Since most PE files use the Windows API to perform the bulk of their jobs, a PE file's imports provide us with crucial information on what that PE file will do. It becomes evident that a PE file that imports the InternetOpen function will communicate with the internet, a URLDownloadToFile function shows that a PE file will download something from the internet, and so on. Names of Windows APIs are generally intuitive and self-explanatory. However, we can always consult Microsoft Documentation(opens in new tab) to verify the purpose of a particular Windows function.
+Since most PE files use the Windows API to perform the bulk of their jobs, a PE file's imports provide us with crucial information on what that PE file will do. It becomes evident that a PE file that imports the InternetOpen function will communicate with the internet, a URLDownloadToFile function shows that a PE file will download something from the internet, and so on. Names of Windows APIs are generally intuitive and self-explanatory. However, we can always consult Microsoft Documentation  to verify the purpose of a particular Windows function.
 
 Sections:
 
@@ -199,12 +199,12 @@ For malware analysis using sandboxes, the following considerations make the malw
 Though it is good to understand what a good sandbox is made of, building a sandbox from scratch is not always necessary. One can always set up Open Source Sandboxes. These sandboxes provide the framework for performing basic dynamic analysis and are also customizable to a significant extent to help those with a more adventurous mindset.
 
 ## Cuckoo's Sandbox
-Cuckoo's sandbox(opens in new tab) is the most widely known sandbox in the malware analysis community. It was developed as part of a Google Summer of Code project in 2010. It is an open-source project that you will often see deployed in SOC environments and with enthusiasts' home labs. Advantages of Cuckoo's sandbox include huge community support, easy-to-understand documentation, and lots of customisations. You can deploy it on your network and let the community signatures guide you into identifying which files are malicious and which are benign because of the vast corpus of community signatures that comes with it.
+Cuckoo's sandbox  is the most widely known sandbox in the malware analysis community. It was developed as part of a Google Summer of Code project in 2010. It is an open-source project that you will often see deployed in SOC environments and with enthusiasts' home labs. Advantages of Cuckoo's sandbox include huge community support, easy-to-understand documentation, and lots of customisations. You can deploy it on your network and let the community signatures guide you into identifying which files are malicious and which are benign because of the vast corpus of community signatures that comes with it.
 
 Cuckoo's sandbox has been archived, and an update is pending. It also doesn't support Python 3, making it obsolete right now. However, all is not lost because we have alternatives.
 
 ## CAPE Sandbox
-CAPE Sandbox(opens in new tab) is a little more advanced version of Cuckoo's Sandbox. It supports debugging and memory dumping to support the unpacking of packed malware . Though beginners can use this sandbox, advanced knowledge is required to fully use it. A community version of this sandbox is available online, and it can be used to test-run it before installation. CAPE Sandbox is so far actively developed and supports Python 3.
+CAPE Sandbox  is a little more advanced version of Cuckoo's Sandbox. It supports debugging and memory dumping to support the unpacking of packed malware . Though beginners can use this sandbox, advanced knowledge is required to fully use it. A community version of this sandbox is available online, and it can be used to test-run it before installation. CAPE Sandbox is so far actively developed and supports Python 3.
 
 ## Online Sandboxes:
 Setting up and maintaining a sandbox can be a time-consuming task. Keeping that in view, online sandboxes can be of great help. Some of the most commonly used online sandboxes are as follows:
@@ -228,7 +228,7 @@ Let's open the one submitted on Windows 7 64-bit from among these.
 
 ![red final samir tool](https://github.com/saad-711/samir-tool/blob/main/image_2026-05-18_002055614.png)
 
-We will see the above interface when we click on the sample. We can see a navigation pane on the right that highlights different parts of the report. We can also see that the verdict is malicious, with a threat score of 100/100 and AV detection of 95%. Below that, we see the overview of the sample's behaviour. Below that, we will see the mapping to MITRE ATT&CK techniques(opens in new tab). We will see the following mapping when we click view all details:
+We will see the above interface when we click on the sample. We can see a navigation pane on the right that highlights different parts of the report. We can also see that the verdict is malicious, with a threat score of 100/100 and AV detection of 95%. Below that, we see the overview of the sample's behaviour. Below that, we will see the mapping to MITRE ATT&CK techniques . We will see the following mapping when we click view all details:
 
 ![red final samir tool](https://github.com/saad-711/samir-tool/blob/main/image_2026-05-18_002102646.png)
 
