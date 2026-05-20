@@ -155,7 +155,9 @@ Sections:
 Another useful piece of information available in the PE file header is the information about sections in the PE file. A PE file is divided into different sections which have different purposes. Although the sections in a PE file depend on the compiler or packer used to compile or pack the binary, the following are the most commonly seen sections in a PE file.
 
 .text: This Section generally contains the CPU instructions executed when the PE file is run. This section is marked as executable.
+
 .data: This Section contains the global variables and other global data used by the PE file.
+
 .rsrc: This section contains resources that are used by the PE file, such as images, icons, etc.
 
 ## Analysing PE header using the pecheck utility
@@ -182,10 +184,15 @@ Sandbox is a term borrowed from the military. A sandbox is a box of sand, as the
 For malware analysis using sandboxes, the following considerations make the malware analysis effective:
 
 -Virtual Machine mimicking the actual target environment of the malware sample
+
 -Ability to take snapshots and revert to a clean state
+
 -OS monitoring software, such as Procmon, ProcExplorer, Regshot, etc.
+
 -Network monitoring software, such as Wireshark, tcpdump, etc.
+
 -Control over the network through a dummy DNS server and web server.
+
 -A mechanism to move analysis logs and malware samples in and out of the Virtual Machine without compromising the host (Be careful with this one. If you have a shared directory with your malware analysis VM that remains accessible when running malware, you might -risk malware affecting all files in your shared directory.
 
 # Open Source Sandboxes
